@@ -1,6 +1,7 @@
 import os
 import re
 from shlex import quote
+import sqlite3
 import struct
 import subprocess
 import time
@@ -17,9 +18,8 @@ from engine.helper import extract_yt_term, remove_words
 from hugchat import hugchat
 import threading
 import queue
-from engine.db_config import get_db_connection
 
-con = get_db_connection()
+con = sqlite3.connect("yuzi.db")
 cursor = con.cursor()
 
 # Create a simple response cache
@@ -106,6 +106,42 @@ def PlayYoutube(query):
     kit.playonyt(search_term)  
 
 
+# Mobile functionality
+def makeCall(name, mobile_no):
+    mobile_number_str = str(mobile_no)
+    if not mobile_number_str.startswith('+91'):
+        mobile_number_str = '+91' + mobile_number_str
+    
+    jarvis_message = "Calling to "+name
+    
+    # Construct the URL for phone call
+    call_url = f"tel:{mobile_number_str}"
+    
+    # Construct the full command
+    full_command = f'start "" "{call_url}"'
+    
+    # Open phone app with the constructed URL
+    subprocess.run(full_command, shell=True)
+    speak(jarvis_message)
+
+
+def sendMessage(message, mobile_no, name):
+    mobile_number_str = str(mobile_no)
+    if not mobile_number_str.startswith('+91'):
+        mobile_number_str = '+91' + mobile_number_str
+    
+    jarvis_message = "Message sent successfully to "+name
+    
+    # Construct the URL for SMS
+    sms_url = f"sms:{mobile_number_str}?body={quote(message)}"
+    
+    # Construct the full command
+    full_command = f'start "" "{sms_url}"'
+    
+    # Open messaging app with the constructed URL
+    subprocess.run(full_command, shell=True)
+    speak(jarvis_message)
+
 
 def hotword():
     porcupine=None
@@ -167,27 +203,30 @@ def findContact(query):
     except:
         speak('not exist in contacts')
         return 0, 0
+    
 
 
 def whatsApp(mobile_no, message, flag, name):
+    
 
     if flag == 'message':
         target_tab = 19
         jarvis_message = "message send successfully to "+name
 
     elif flag == 'call':
-        target_tab = 14
+        target_tab = 13
         message = ''
         jarvis_message = "calling to "+name
 
     else:
-        target_tab = 13
+        target_tab = 12
         message = ''
         jarvis_message = "staring video call with "+name
 
+
     # Encode the message for URL
     encoded_message = quote(message)
-
+    print(encoded_message)
     # Construct the URL
     whatsapp_url = f"whatsapp://send?phone={mobile_no}&text={encoded_message}"
 
@@ -206,7 +245,6 @@ def whatsApp(mobile_no, message, flag, name):
 
     pyautogui.hotkey('enter')
     speak(jarvis_message)
-
 
 
 # Function to handle HugChat in a separate thread

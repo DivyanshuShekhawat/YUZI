@@ -1,8 +1,7 @@
 import csv
-import os
-from engine.db_config import get_db_connection
+import sqlite3
 
-conn = get_db_connection()
+conn = sqlite3.connect("yuzi.db")
 cursor = conn.cursor()
 
 query = "CREATE TABLE IF NOT EXISTS sys_command(id integer primary key, name VARCHAR(100), path VARCHAR(1000))"
