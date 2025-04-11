@@ -5,7 +5,7 @@ services:
     plan: free
     region: ohio
     buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: gunicorn -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 app_web:app
+    startCommand: gunicorn -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 app_web:app -b 0.0.0.0:$PORT
     envVars:
       - key: ENVIRONMENT
         value: production
