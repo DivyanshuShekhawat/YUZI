@@ -1,0 +1,17 @@
+.qodo
+/envyuzi
+contacts.csv
+yuzi.db
+/engine/__pycache__
+/engine/cookies.json
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.env.local
+.venv
+env/
+venv/
+ENV/
+*.log
+.DS_Store
