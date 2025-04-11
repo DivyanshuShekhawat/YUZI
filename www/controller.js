@@ -2,7 +2,7 @@ $(document).ready(function () {
     // Configure WebSocket URL for different environments
     if (window.location.hostname !== 'localhost') {
         // Production environment - update this to your Render backend URL
-        eel.set_host('https://yuzi-backend.onrender.com');
+        eel.set_host('https://yuzi.onrender.com');
     }
 
     // Display Speak Message
