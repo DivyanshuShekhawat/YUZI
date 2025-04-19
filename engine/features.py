@@ -98,49 +98,15 @@ def openCommand(query):
         except:
             speak("some thing went wrong")
 
+
        
 
 def PlayYoutube(query):
     search_term = extract_yt_term(query)
     speak("Playing "+search_term+" on YouTube")
-    kit.playonyt(search_term)  
+    kit.playonyt(search_term)
 
 
-# Mobile functionality
-def makeCall(name, mobile_no):
-    mobile_number_str = str(mobile_no)
-    if not mobile_number_str.startswith('+91'):
-        mobile_number_str = '+91' + mobile_number_str
-    
-    jarvis_message = "Calling to "+name
-    
-    # Construct the URL for phone call
-    call_url = f"tel:{mobile_number_str}"
-    
-    # Construct the full command
-    full_command = f'start "" "{call_url}"'
-    
-    # Open phone app with the constructed URL
-    subprocess.run(full_command, shell=True)
-    speak(jarvis_message)
-
-
-def sendMessage(message, mobile_no, name):
-    mobile_number_str = str(mobile_no)
-    if not mobile_number_str.startswith('+91'):
-        mobile_number_str = '+91' + mobile_number_str
-    
-    jarvis_message = "Message sent successfully to "+name
-    
-    # Construct the URL for SMS
-    sms_url = f"sms:{mobile_number_str}?body={quote(message)}"
-    
-    # Construct the full command
-    full_command = f'start "" "{sms_url}"'
-    
-    # Open messaging app with the constructed URL
-    subprocess.run(full_command, shell=True)
-    speak(jarvis_message)
 
 
 def hotword():
@@ -210,20 +176,21 @@ def whatsApp(mobile_no, message, flag, name):
     
 
     if flag == 'message':
-        target_tab = 19
-        jarvis_message = "message send successfully to "+name
+        target_tab = 21
+        jarvis_message = "message send successfully to "+name + message
 
     elif flag == 'call':
-        target_tab = 13
+        target_tab = 12
         message = ''
         jarvis_message = "calling to "+name
 
     else:
-        target_tab = 12
+        target_tab = 11
         message = ''
         jarvis_message = "staring video call with "+name
 
 
+    
     # Encode the message for URL
     encoded_message = quote(message)
     print(encoded_message)
@@ -238,14 +205,13 @@ def whatsApp(mobile_no, message, flag, name):
     time.sleep(5)
     subprocess.run(full_command, shell=True)
     
-    pyautogui.hotkey('ctrl', 'f')
+    pyautogui.hotkey('ctrl', 'f','enter')
 
     for i in range(1, target_tab):
         pyautogui.hotkey('tab')
 
     pyautogui.hotkey('enter')
     speak(jarvis_message)
-
 
 # Function to handle HugChat in a separate thread
 def get_hugchat_response(query, result_queue):

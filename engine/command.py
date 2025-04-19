@@ -2,10 +2,6 @@ import pyttsx3
 import speech_recognition as sr
 import eel
 import time
-
-
-
-
 def speak(text):
     text = str(text)
     engine = pyttsx3.init('sapi5')
@@ -63,23 +59,23 @@ def allCommands(message=1):
             PlayYoutube(query)
         
         elif "send message" in query or "phone call" in query or "video call" in query:
-            from engine.features import findContact, whatsApp, makeCall, sendMessage
+            from engine.features import findContact, whatsApp
+            message = ""
             contact_no, name = findContact(query)
             if(contact_no != 0):
-                # Use WhatsApp directly without asking for mode
-                message = ""
+
                 if "send message" in query:
                     message = 'message'
                     speak("what message to send")
                     query = takecommand()
-                                    
+                    
                 elif "phone call" in query:
                     message = 'call'
                 else:
                     message = 'video call'
-                                    
+                    
                 whatsApp(contact_no, query, message, name)
-
+                
         else:
             try:
                 from engine.features import chatBot

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: yuzi-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --worker-class=gevent --worker-connections=1000 --workers=2 wsgi:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: ASSISTANT_NAME
+        value: Y.U.Z.I
+    secretFiles:
+      - key: COOKIES_JSON
+        mountPath: /app/engine/cookies.json
+    plan: free 

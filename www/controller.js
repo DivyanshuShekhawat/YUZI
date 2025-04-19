@@ -1,15 +1,14 @@
 $(document).ready(function () {
-    // Configure WebSocket URL for different environments
-    if (window.location.hostname !== 'localhost') {
-        // Production environment - update this to your Render backend URL
-        eel.set_host('https://yuzi.onrender.com');
-    }
+
+
 
     // Display Speak Message
     eel.expose(DisplayMessage)
     function DisplayMessage(message) {
+
         $(".siri-message li:first").text(message);
         $('.siri-message').textillate('start');
+
     }
 
     // Display hood
@@ -35,6 +34,7 @@ $(document).ready(function () {
 
     eel.expose(receiverText)
     function receiverText(message) {
+
         var chatBox = document.getElementById("chat-canvas-body");
         if (message.trim() !== "") {
             chatBox.innerHTML += `<div class="row justify-content-start mb-4">
@@ -46,5 +46,8 @@ $(document).ready(function () {
             // Scroll to the bottom of the chat box
             chatBox.scrollTop = chatBox.scrollHeight;
         }
+        
     }
+
+    
 });
