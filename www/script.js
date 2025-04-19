@@ -26,12 +26,6 @@ function canvasApp() {
 	}
 
 	var theCanvas = document.getElementById("canvasOne");
-	if (!theCanvas) {
-		// Canvas not available, skip initialization
-		console.log("Canvas element not found, skipping particle animation");
-		return;
-	}
-
 	var context = theCanvas.getContext("2d");
 
 	var displayWidth;
@@ -71,6 +65,7 @@ function canvasApp() {
 
 	init();
 
+	// eel.expose(init)
 	function init() {
 		wait = 1;
 		count = wait - 1;
@@ -79,7 +74,7 @@ function canvasApp() {
 		//particle color
 		r = 93;
 		g = 63;
-		b = 106;
+		b = 106;
 		
 		rgbString = "rgba(" + r + "," + g + "," + b + ","; //partial string for color which will be completed by appending alpha value.
 		particleAlpha = 1; //maximum alpha
@@ -224,6 +219,7 @@ function canvasApp() {
 			if (outsideTest || p.dead) {
 				recycle(p);
 			}
+
 			else {
 				//depth-dependent darkening
 				depthAlphaFactor = (1 - rotZ / zeroAlphaDepth);
@@ -328,40 +324,29 @@ function canvasApp() {
 	}
 }
 
-// Create mock slider if jQuery UI is available
-$(function() {
-	// Check if jQuery UI slider is available
-	if ($.fn.slider) {
-		$("#slider-range").slider({
-			range: false,
-			min: 20,
-			max: 500,
-			value: 280,
-			slide: function(event, ui) {
-				console.log(ui.value);
-				sphereRad = ui.value;
-			}
-		});
 
-		$("#slider-test").slider({
-			range: false,
-			min: 1.0,
-			max: 2.0,
-			value: 1,
-			step: 0.01,
-			slide: function(event, ui) {
-				radius_sp = ui.value;
-			}
-		});
-	} else {
-		// Fallback for when jQuery UI is not available
-		console.log("jQuery UI slider not available - using default values");
-		// Create slider element containers if they don't exist
-		if (!document.getElementById('slider-range')) {
-			$('<div id="slider-range" style="display:none;"></div>').appendTo('body');
+$(function () {
+	$("#slider-range").slider({
+		range: false,
+		min: 20,
+		max: 500,
+		value: 280,
+		slide: function (event, ui) {
+			console.log(ui.value);
+			sphereRad = ui.value;
 		}
-		if (!document.getElementById('slider-test')) {
-			$('<div id="slider-test" style="display:none;"></div>').appendTo('body');
+	});
+});
+
+$(function () {
+	$("#slider-test").slider({
+		range: false,
+		min: 1.0,
+		max: 2.0,
+		value: 1,
+		step: 0.01,
+		slide: function (event, ui) {
+			radius_sp = ui.value;
 		}
-	}
+	});
 });

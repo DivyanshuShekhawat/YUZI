@@ -4,6 +4,3 @@ contacts.csv
 yuzi.db
 /engine/__pycache__
 /engine/cookies.json
-__pycache__/
-.env
-.vscode/
