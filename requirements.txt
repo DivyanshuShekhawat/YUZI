@@ -1,15 +1,19 @@
-eel==0.14.0
-pyttsx3==2.90
-SpeechRecognition==3.10.0
-playsound==1.3.0
-pvporcupine==2.1.4
-# pyaudio often causes issues in cloud environments, using a pure Python alternative
-sounddevice==0.4.6
-# pyautogui requires X server, which isn't available on Render
-# pyautogui==0.9.53
-# Using a simpler alternative without GUI dependencies
-pywhatkit==5.4
-hugchat==0.3.8
+# Web server
 flask==2.0.1
 gunicorn==20.1.0
-gevent==21.12.0 
+gevent==21.12.0
+
+# Chat functionality
+hugchat==0.3.8
+
+# Core utilities
+pywhatkit==5.4
+
+# Basic functionality only for API service
+# These packages are commented out as they're problematic in cloud environments
+# eel==0.14.0 
+# pyttsx3==2.90
+# SpeechRecognition==3.10.0
+# playsound==1.3.0
+# pvporcupine==2.1.4
+# sounddevice==0.4.6 
