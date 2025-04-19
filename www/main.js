@@ -3,6 +3,13 @@ $(document).ready(function () {
     // Initialize with animations
     initializeUI();
     
+    // Detect if we're running on the same domain or need to use API URL
+    const isLocalDevelopment = window.location.hostname === 'localhost' || 
+                              window.location.hostname === '127.0.0.1';
+    
+    // API base URL - will use relative path if on same domain, or full URL if different domain
+    const apiBaseUrl = isLocalDevelopment ? '' : 'https://yuzi-backend.onrender.com';
+    
     // Initialize SiriWave
     var siriWave = new SiriWave({
         container: document.getElementById("siri-container"),
@@ -43,7 +50,7 @@ $(document).ready(function () {
         
         // Send command to backend API
         $.ajax({
-            url: '/api/command',
+            url: `${apiBaseUrl}/api/command`,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ command: message }),
@@ -63,10 +70,11 @@ $(document).ready(function () {
                     }, 1500);
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error("API Error:", error);
                 $("#siri-message").text("Sorry, I'm having trouble connecting to my brain.");
                 setTimeout(function() {
-                    addMessage("Sorry, I'm having trouble connecting to my brain.", 'receiver');
+                    addMessage("Sorry, I'm having trouble connecting to my brain. Please make sure the backend is running.", 'receiver');
                     toggleSiriWave(false);
                 }, 1500);
             }
@@ -148,5 +156,10 @@ $(document).ready(function () {
     // Initial welcome message
     setTimeout(function() {
         addMessage("Hello! I'm Y.U.Z.I. How can I help you today?", 'receiver');
+        
+        // If not on the same domain as backend, show connectivity information
+        if (!isLocalDevelopment) {
+            addMessage("I'm connected to a backend at " + apiBaseUrl, 'receiver');
+        }
     }, 1000);
 });

@@ -1,8 +1,11 @@
 import os
 from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='www')
+# Enable CORS for all routes
+CORS(app)
 
 @app.route('/')
 def index():
