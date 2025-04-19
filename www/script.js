@@ -26,6 +26,12 @@ function canvasApp() {
 	}
 
 	var theCanvas = document.getElementById("canvasOne");
+	if (!theCanvas) {
+		// Canvas not available, skip initialization
+		console.log("Canvas element not found, skipping particle animation");
+		return;
+	}
+
 	var context = theCanvas.getContext("2d");
 
 	var displayWidth;
@@ -65,7 +71,6 @@ function canvasApp() {
 
 	init();
 
-	// eel.expose(init)
 	function init() {
 		wait = 1;
 		count = wait - 1;
@@ -74,7 +79,7 @@ function canvasApp() {
 		//particle color
 		r = 93;
 		g = 63;
-		b = 106;
+		b = 106;
 		
 		rgbString = "rgba(" + r + "," + g + "," + b + ","; //partial string for color which will be completed by appending alpha value.
 		particleAlpha = 1; //maximum alpha
@@ -219,7 +224,6 @@ function canvasApp() {
 			if (outsideTest || p.dead) {
 				recycle(p);
 			}
-
 			else {
 				//depth-dependent darkening
 				depthAlphaFactor = (1 - rotZ / zeroAlphaDepth);
@@ -323,7 +327,6 @@ function canvasApp() {
 		}
 	}
 }
-
 
 $(function () {
 	$("#slider-range").slider({

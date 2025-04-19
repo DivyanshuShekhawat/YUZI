@@ -1,15 +1,19 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='www')
 
 @app.route('/')
 def index():
-    return "Yuzi Backend API is running! Access web interface for full functionality."
+    return app.send_static_file('index.html')
 
 @app.route('/static/<path:path>')
 def serve_static(path):
+    return app.send_static_file(path)
+
+@app.route('/<path:path>')
+def serve_any_file(path):
     return app.send_static_file(path)
 
 @app.route('/api/command', methods=['POST'])
@@ -24,7 +28,12 @@ def process_command():
         search_term = query.lower().replace('play', '').replace('on youtube', '').strip()
         response = f"The command to play '{search_term}' on YouTube was received."
     else:
-        response = f"Received command: {query}"
+        # Try to get a more meaningful response
+        try:
+            from engine.features import simple_fallback_response
+            response = simple_fallback_response(query)
+        except:
+            response = f"I received your message: {query}"
     
     return jsonify({
         "status": "success", 

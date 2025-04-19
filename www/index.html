@@ -58,11 +58,9 @@
                             <div id="TextInput" class="d-flex">
 
                                 <input type="text" class="chatbox" id="chatbox" placeholder="type here...">
-                                <button id="SendBtn" class="glow-on-hover" hidden><i class="bi bi-send"></i></button>
-                                <button id="MicBtn" class="glow-on-hover"><i class="bi bi-mic"></i></button>
+                                <button id="SendBtn" class="glow-on-hover"><i class="bi bi-send"></i></button>
                                 <button id="ChatBtn" class="glow-on-hover" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><i class="bi bi-chat-dots"></i></button>
-                                <button id="SettingsBtn" class="glow-on-hover"><i class="bi bi-gear"></i></button>
                             </div>
                         </div>
                     </div>
@@ -80,7 +78,7 @@
                         <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
 
                             <div class="">
-                                <p class="text-start text-light mb-4 siri-message">Hello, I am Y.U.Z.I</p>
+                                <p id="siri-message" class="text-start text-light mb-4">Hello, I am Y.U.Z.I</p>
                                 <div id="siri-container"></div>
                             </div>
 
@@ -124,11 +122,9 @@
     <!--Textllate js-->
     <script src="assets/vendore/jquery.fittext.js"></script>
     <script src="assets/vendore/jquery.lettering.js"></script>
-    <script src="http://jschr.github.io/textillate/jquery.textillate.js"></script>
+    <script src="assets/vendore/jquery.textillate.js"></script>
 
     <script src="main.js"></script>
-    <script src="controller.js"></script>
-    <script src="/eel.js"></script>
 </body>
 
 </html>
