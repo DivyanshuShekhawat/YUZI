@@ -120,16 +120,22 @@ $(document).ready(function () {
     function initializeUI() {
         // Animation for the text
         if ($.fn.textillate) {
-            $('.text').textillate({
-                loop: true,
-                sync: true,
-                in: {
-                    effect: "bounceIn",
-                },
-                out: {
-                    effect: "bounceOut",
-                }
-            });
+            try {
+                $('.text').textillate({
+                    loop: true,
+                    sync: true,
+                    in: {
+                        effect: "bounceIn",
+                    },
+                    out: {
+                        effect: "bounceOut",
+                    }
+                });
+            } catch (e) {
+                console.error("Error initializing textillate:", e);
+            }
+        } else {
+            console.warn("textillate plugin not available");
         }
     }
 
