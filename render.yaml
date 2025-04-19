@@ -9,7 +9,9 @@ services:
         value: 3.9.0
       - key: ASSISTANT_NAME
         value: Y.U.Z.I
+      - key: PORT
+        value: 10000
     secretFiles:
       - key: COOKIES_JSON
-        mountPath: /app/engine/cookies.json
+        mountPath: /opt/render/project/src/engine/cookies.json
     plan: free 
