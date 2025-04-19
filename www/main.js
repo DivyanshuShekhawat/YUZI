@@ -3,12 +3,23 @@ $(document).ready(function () {
     // Initialize with animations
     initializeUI();
     
-    // Detect if we're running on the same domain or need to use API URL
-    const isLocalDevelopment = window.location.hostname === 'localhost' || 
-                              window.location.hostname === '127.0.0.1';
+    // Detect environment and set up API URL
+    let apiBaseUrl;
+
+    // If NETLIFY_BACKEND_URL is set via environment variable (embedded in the page during build)
+    if (typeof NETLIFY_BACKEND_URL !== 'undefined') {
+        apiBaseUrl = NETLIFY_BACKEND_URL;
+    }
+    // Check if we're running locally
+    else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        apiBaseUrl = '';  // Use relative URLs on localhost
+    }
+    // Default to production backend URL if deployed elsewhere
+    else {
+        apiBaseUrl = 'https://yuzi-backend.onrender.com';  // Replace with your actual backend URL
+    }
     
-    // API base URL - will use relative path if on same domain, or full URL if different domain
-    const apiBaseUrl = isLocalDevelopment ? '' : 'https://yuzi-backend.onrender.com';
+    console.log("API Base URL:", apiBaseUrl);
     
     // Initialize SiriWave
     var siriWave = new SiriWave({
@@ -74,7 +85,7 @@ $(document).ready(function () {
                 console.error("API Error:", error);
                 $("#siri-message").text("Sorry, I'm having trouble connecting to my brain.");
                 setTimeout(function() {
-                    addMessage("Sorry, I'm having trouble connecting to my brain. Please make sure the backend is running.", 'receiver');
+                    addMessage(`Sorry, I'm having trouble connecting to my backend at ${apiBaseUrl}. Please make sure it's running.`, 'receiver');
                     toggleSiriWave(false);
                 }, 1500);
             }
@@ -157,9 +168,11 @@ $(document).ready(function () {
     setTimeout(function() {
         addMessage("Hello! I'm Y.U.Z.I. How can I help you today?", 'receiver');
         
-        // If not on the same domain as backend, show connectivity information
-        if (!isLocalDevelopment) {
-            addMessage("I'm connected to a backend at " + apiBaseUrl, 'receiver');
+        // Show connection info
+        if (apiBaseUrl) {
+            addMessage(`I'm connected to backend at: ${apiBaseUrl}`, 'receiver');
+        } else {
+            addMessage("I'm using a relative API path for local development", 'receiver');
         }
     }, 1000);
 });

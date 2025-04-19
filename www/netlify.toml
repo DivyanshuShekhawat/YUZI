@@ -1,0 +1,11 @@
+[build]
+  publish = "/"
+  command = ""
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  NETLIFY_BACKEND_URL = "https://yuzi-backend.onrender.com" 
