@@ -15,7 +15,7 @@ from engine.command import speak
 from engine.config import ASSISTANT_NAME
 import pywhatkit as kit
 from engine.helper import extract_yt_term, remove_words
-from hugchat import hugchat
+import requests
 import threading
 import queue
 
@@ -176,16 +176,16 @@ def whatsApp(mobile_no, message, flag, name):
     
 
     if flag == 'message':
-        target_tab = 21
-        jarvis_message = "message send successfully to "+name + message
+        target_tab = 22
+        jarvis_message = "message send successfully to "+name
 
     elif flag == 'call':
-        target_tab = 12
+        target_tab = 16
         message = ''
         jarvis_message = "calling to "+name
 
     else:
-        target_tab = 11
+        target_tab = 15
         message = ''
         jarvis_message = "staring video call with "+name
 
@@ -214,7 +214,7 @@ def whatsApp(mobile_no, message, flag, name):
     speak(jarvis_message)
 
 # Function to handle HugChat in a separate thread
-def get_hugchat_response(query, result_queue):
+'''def get_hugchat_response(query, result_queue):
     try:
         print(f"Creating ChatBot with query: {query}")
         chatbot = hugchat.ChatBot(cookie_path="engine\\cookies.json")
@@ -243,6 +243,56 @@ def get_hugchat_response(query, result_queue):
         result_queue.put(("success", response))
     except Exception as e:
         print(f"ERROR IN HUGCHAT: {str(e)}")
+        result_queue.put(("error", f"Error: {str(e)}"))'''
+
+API_KEY = "Perplexity_Api_Key"  # <- replace this with your actual key
+MODEL_NAME = "sonar"  # free model, 50 requests/min
+
+LAST_REQUEST_TIME = 0
+REQUEST_INTERVAL = 1.2  # 60 / 50 RPM ≈ 1.2 sec per request
+
+def wait_for_rate_limit():
+    global LAST_REQUEST_TIME
+    elapsed = time.time() - LAST_REQUEST_TIME
+    if elapsed < REQUEST_INTERVAL:
+        time.sleep(REQUEST_INTERVAL - elapsed)
+    LAST_REQUEST_TIME = time.time()
+
+def get_perplexity_response(query, result_queue):
+    try:
+        wait_for_rate_limit()
+        print(f"Sending query to Perplexity: {query}")
+
+        url = "https://api.perplexity.ai/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json"
+        }
+
+        system_message = (
+            "You are a helpful assistant that provides concise answers in exactly 2-3 lines total. "
+            "Summarize information into these 2-3 lines rather than cutting off mid-thought."
+        )
+
+        data = {
+            "model": MODEL_NAME,
+            "messages": [
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": query}
+            ]
+        }
+
+        response = requests.post(url, headers=headers, json=data, timeout=60)
+        if response.status_code != 200:
+            raise Exception(f"Bad status code: {response.status_code}, {response.text}")
+
+        resp_json = response.json()
+        result_text = resp_json["choices"][0]["message"]["content"]
+        print(f"Received response: {result_text[:100]}...")
+        result_queue.put(("success", result_text))
+
+    except Exception as e:
+        print(f"ERROR IN PERPLEXITY: {str(e)}")
         result_queue.put(("error", f"Error: {str(e)}"))
 
 def simple_fallback_response(query):
@@ -322,11 +372,11 @@ def chatBot(query):
         # Set up threading to make it non-blocking
         result_queue = queue.Queue()
         chat_thread = threading.Thread(
-            target=get_hugchat_response, 
-            args=(formatted_query, result_queue)
-        )
+        target=get_perplexity_response, 
+        args=(formatted_query, result_queue)
+)
         chat_thread.daemon = True
-        print("Starting thread for HugChat request")
+        print("Starting thread for Perplexity request")
         chat_thread.start()
         
         # Wait for response with longer timeout
